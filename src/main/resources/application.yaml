@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: book-catalog-api
+
+server:
+  port: ${PORT:8080}

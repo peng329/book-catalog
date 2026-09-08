@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: personal-bookshelf-catalog-api
+    runtime: docker
+    plan: free
+    region: singapore
+    autoDeployTrigger: commit
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: real
+      - key: APP_GOOGLE_BOOKS_API_KEY
+        sync: false
+      - key: CATALOG_WEB_SOURCE_BASE_URL
+        sync: false
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xms64m -Xmx256m
