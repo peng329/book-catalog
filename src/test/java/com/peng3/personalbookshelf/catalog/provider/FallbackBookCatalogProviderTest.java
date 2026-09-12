@@ -4,6 +4,9 @@ import com.peng3.personalbookshelf.catalog.domain.Book;
 import com.peng3.personalbookshelf.catalog.provider.webcatalog.WebCatalogProviderUnavailableException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +17,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(OutputCaptureExtension.class)
 class FallbackBookCatalogProviderTest {
 
     private static final String ISBN = "9789861375182";
@@ -41,7 +45,7 @@ class FallbackBookCatalogProviderTest {
     }
 
     @Test
-    void shouldUseGoogleWhenWebCatalogReturnsEmpty() {
+    void shouldUseGoogleWhenWebCatalogReturnsEmpty(CapturedOutput output) {
         Book googleResult = book("Google 書名");
         when(webCatalog.findByIsbn(ISBN)).thenReturn(Optional.empty());
         when(googleBooks.findByIsbn(ISBN)).thenReturn(Optional.of(googleResult));
@@ -50,10 +54,13 @@ class FallbackBookCatalogProviderTest {
 
         assertThat(result).contains(googleResult);
         verify(googleBooks).findByIsbn(ISBN);
+        assertThat(output)
+                .contains("網頁書目來源未回傳資料")
+                .contains(ISBN);
     }
 
     @Test
-    void shouldUseGoogleWhenWebCatalogIsUnavailable() {
+    void shouldUseGoogleWhenWebCatalogIsUnavailable(CapturedOutput output) {
         Book googleResult = book("Google 書名");
         when(webCatalog.findByIsbn(ISBN)).thenThrow(
                 new WebCatalogProviderUnavailableException(
@@ -67,6 +74,11 @@ class FallbackBookCatalogProviderTest {
 
         assertThat(result).contains(googleResult);
         verify(googleBooks).findByIsbn(ISBN);
+        assertThat(output)
+                .contains("網頁書目來源不可用")
+                .contains("RuntimeException")
+                .doesNotContain("網頁書目來源暫時無法使用")
+                .doesNotContain("test");
     }
 
     private Book book(String title) {
