@@ -17,7 +17,19 @@ class ChromeWebCatalogWebDriverFactoryTest {
         ChromeOptions options = factory(true).createOptions();
 
         assertThat(chromeArguments(options))
-                .contains("--headless=new", "--no-sandbox", "--disable-dev-shm-usage", "--lang=zh-TW");
+                .contains(
+                        "--headless=new",
+                        "--no-sandbox",
+                        "--disable-dev-shm-usage",
+                        "--lang=zh-TW",
+                        "--disable-gpu",
+                        "--disable-extensions",
+                        "--disable-background-networking",
+                        "--disable-sync",
+                        "--no-first-run",
+                        "--renderer-process-limit=1",
+                        "--blink-settings=imagesEnabled=false"
+                );
     }
 
     @Test
@@ -26,7 +38,13 @@ class ChromeWebCatalogWebDriverFactoryTest {
 
         assertThat(chromeArguments(options))
                 .contains("--lang=zh-TW")
-                .doesNotContain("--headless=new", "--no-sandbox", "--disable-dev-shm-usage");
+                .doesNotContain(
+                        "--headless=new",
+                        "--no-sandbox",
+                        "--disable-dev-shm-usage",
+                        "--renderer-process-limit=1",
+                        "--blink-settings=imagesEnabled=false"
+                );
     }
 
     private ChromeWebCatalogWebDriverFactory factory(boolean headless) {

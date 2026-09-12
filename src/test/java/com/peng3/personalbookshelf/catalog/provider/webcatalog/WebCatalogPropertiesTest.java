@@ -27,6 +27,6 @@ class WebCatalogPropertiesTest {
         assertThat(parameters[2].getAnnotation(DefaultValue.class).value())
                 .containsExactly("2s");
         assertThat(parameters[3].getAnnotation(DefaultValue.class).value())
-                .containsExactly("20s");
+                .containsExactly("5s");
     }
 }

@@ -29,7 +29,14 @@ public class ChromeWebCatalogWebDriverFactory implements WebCatalogWebDriverFact
             options.addArguments(
                     "--headless=new",
                     "--no-sandbox",
-                    "--disable-dev-shm-usage"
+                    "--disable-dev-shm-usage",
+                    "--disable-gpu",
+                    "--disable-extensions",
+                    "--disable-background-networking",
+                    "--disable-sync",
+                    "--no-first-run",
+                    "--renderer-process-limit=1",
+                    "--blink-settings=imagesEnabled=false"
             );
         }
         return options;
