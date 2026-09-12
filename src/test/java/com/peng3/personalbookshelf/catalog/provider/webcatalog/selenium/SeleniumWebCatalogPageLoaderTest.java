@@ -7,8 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
 
@@ -23,6 +25,8 @@ import static org.mockito.Mockito.when;
 
 class SeleniumWebCatalogPageLoaderTest {
 
+    private static final By BOOK_NAME = By.cssSelector("#GoodsGridDiv .b_name");
+
     private WebDriver driver;
     private SeleniumWebCatalogPageLoader loader;
 
@@ -33,6 +37,7 @@ class SeleniumWebCatalogPageLoaderTest {
         WebDriver.Timeouts timeouts = mock(WebDriver.Timeouts.class);
         when(driver.manage()).thenReturn(options);
         when(options.timeouts()).thenReturn(timeouts);
+        when(driver.findElement(BOOK_NAME)).thenReturn(mock(WebElement.class));
 
         WebCatalogWebDriverFactory driverFactory = () -> driver;
         WebCatalogProperties properties = new WebCatalogProperties(
@@ -72,6 +77,7 @@ class SeleniumWebCatalogPageLoaderTest {
 
         assertThat(html).isEqualTo("<html>book</html>");
         verify(driver).get("https://catalog-source.invalid/9789861375182");
+        verify(driver).findElement(BOOK_NAME);
         verify(driver).quit();
     }
 
@@ -135,6 +141,7 @@ class SeleniumWebCatalogPageLoaderTest {
         WebDriver.Timeouts timeouts = mock(WebDriver.Timeouts.class);
         when(mockDriver.manage()).thenReturn(options);
         when(options.timeouts()).thenReturn(timeouts);
+        when(mockDriver.findElement(BOOK_NAME)).thenReturn(mock(WebElement.class));
         return mockDriver;
     }
 

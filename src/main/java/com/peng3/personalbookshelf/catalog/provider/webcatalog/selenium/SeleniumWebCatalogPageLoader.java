@@ -4,8 +4,11 @@ import com.peng3.personalbookshelf.catalog.provider.webcatalog.WebCatalogPageLoa
 import com.peng3.personalbookshelf.catalog.provider.webcatalog.WebCatalogProperties;
 import com.peng3.personalbookshelf.catalog.provider.webcatalog.WebCatalogProviderUnavailableException;
 import jakarta.annotation.PreDestroy;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Profile({"local", "real"})
 public class SeleniumWebCatalogPageLoader implements WebCatalogPageLoader, AutoCloseable {
+
+    private static final By BOOK_NAME = By.cssSelector("#GoodsGridDiv .b_name");
 
     private final WebCatalogWebDriverFactory driverFactory;
     private final WebCatalogProperties properties;
@@ -35,6 +40,8 @@ public class SeleniumWebCatalogPageLoader implements WebCatalogPageLoader, AutoC
         try {
             WebDriver currentDriver = getOrCreateDriver();
             currentDriver.get(targetUrl);
+            new WebDriverWait(currentDriver, properties.pageTimeout())
+                    .until(ExpectedConditions.presenceOfElementLocated(BOOK_NAME));
             return currentDriver.getPageSource();
         } catch (WebDriverException exception) {
             throw new WebCatalogProviderUnavailableException(
