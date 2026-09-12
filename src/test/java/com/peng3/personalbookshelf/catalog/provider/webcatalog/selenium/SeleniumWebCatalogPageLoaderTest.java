@@ -72,6 +72,7 @@ class SeleniumWebCatalogPageLoaderTest {
 
         assertThat(html).isEqualTo("<html>book</html>");
         verify(driver).get("https://catalog-source.invalid/9789861375182");
+        verify(driver).quit();
     }
 
     @Test

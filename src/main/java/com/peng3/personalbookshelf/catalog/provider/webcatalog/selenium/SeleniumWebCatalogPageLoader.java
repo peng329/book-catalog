@@ -37,12 +37,12 @@ public class SeleniumWebCatalogPageLoader implements WebCatalogPageLoader, AutoC
             currentDriver.get(targetUrl);
             return currentDriver.getPageSource();
         } catch (WebDriverException exception) {
-            closeDriverQuietly();
             throw new WebCatalogProviderUnavailableException(
                     "網頁書目來源頁面載入失敗，ISBN：" + isbn,
                     exception
             );
         } finally {
+            closeDriverQuietly();
             lastRequestCompletedAtNanos = System.nanoTime();
         }
     }
